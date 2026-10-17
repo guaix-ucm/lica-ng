@@ -13,7 +13,7 @@ from logging import StreamHandler
 from logging.handlers import TimedRotatingFileHandler, WatchedFileHandler
 from logging.handlers import QueueHandler, QueueListener
 
-from ..types import LogLevel
+from ..common import LogLevel, to_std_logging
 
 # -----------------------
 # Module global variables
@@ -32,7 +32,7 @@ def root_logger(
 ) -> QueueListener:
     """Configure the root logger"""
     # set the root logger level
-    log.setLevel(level)
+    log.setLevel(to_std_logging(level))
     # Log formatter
     # fmt = logging.Formatter('%(asctime)s - %(name)s [%(levelname)s] %(message)s')
     if fmt_str is None:

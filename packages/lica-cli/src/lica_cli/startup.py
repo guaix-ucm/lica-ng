@@ -51,11 +51,14 @@ def execute(
     log_fmt: str | None = None,
 ) -> None:
     try:
+        print("CUCUUUUU")
+        return
         return_code = 1
         parser = arg_parser(name, version, description)
         add_args_func(parser)  # Adds more arguments
         args = parser.parse_args(sys.argv[1:])
-        root_logger(args.log_level, args.console, args.log_file, log_rotate, log_fmt)
+        log_level = LogLevel.INFO if args.log_level is None else args.log_level
+        root_logger(log_level, args.console, args.log_file, log_rotate, log_fmt)
         log.info(f"============== {name} {version} ==============")
         main_func(args)
         return_code = 0
