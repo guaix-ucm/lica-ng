@@ -8,13 +8,17 @@
 # Standard library
 # ----------------
 import asyncio
+import logging
 import sys
 import traceback
 from argparse import ArgumentParser, Namespace
-from typing import Callable, Coroutine, Any
+from typing import Any, Callable, Coroutine
 
 from lica_log import LogLevel
 from lica_log.asyncio.logging import root_logger
+
+# get the root logger
+log = logging.getLogger()
 
 
 def arg_parser(name: str, version: str, description: str) -> ArgumentParser:
