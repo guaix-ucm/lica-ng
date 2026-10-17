@@ -86,7 +86,7 @@ def vfloat01(num_str: str) -> float:
 
 
 def vnat(num_str: str) -> int:
-    """Natural nambrs validator"""
+    """Natural numbers validator"""
     num = int(num_str)
     if not (num > 0):
         raise ValueError(f"Value {num} <= 0]")
