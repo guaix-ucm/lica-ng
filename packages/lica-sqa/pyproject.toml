@@ -18,13 +18,17 @@ classifiers = [
 ]
 
 dependencies = [
-    "sqlalchemy"
+    "sqlalchemy",
+
 ]
 
 [project.optional-dependencies]
 # sqlalchemy.asyncio subpackage need this
 asyncio = [
     "sqlalchemy[asyncio] >= 2.0",
+]
+decouple = [
+   "python-decouple",
 ]
 
 [[tool.uv.index]]
