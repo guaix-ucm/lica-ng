@@ -9,8 +9,11 @@ from .errors import (
 from .models import ImageMetadata
 from .ports import ImageReader, ImageReaderFactory
 from .types import BayerIndex, BayerPattern, HeaderType, ImageType, IntArray2D
+from .rect import Rect, Point
 
 __all__ = [
+    "Rect",
+    "Point",
     "ImageReader",
     "ImageMetadata",
     "ImageReaderFactory",
