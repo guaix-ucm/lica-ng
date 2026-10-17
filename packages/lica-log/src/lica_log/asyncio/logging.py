@@ -9,6 +9,7 @@
 # Standard library
 # ----------------
 import logging
+import queue
 from logging import StreamHandler
 from logging.handlers import TimedRotatingFileHandler, WatchedFileHandler
 from logging.handlers import QueueHandler, QueueListener
