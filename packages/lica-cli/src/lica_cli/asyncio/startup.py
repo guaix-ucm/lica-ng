@@ -17,33 +17,13 @@ from typing import Any, Callable, Coroutine
 from lica_log import LogLevel
 from lica_log.asyncio.logging import root_logger
 
+from lica_log import Logger
+from ...common import create_arg_parser
+
 # get the root logger
 log = logging.getLogger()
 
 
-def arg_parser(name: str, version: str, description: str) -> ArgumentParser:
-    # create the top-level parser
-    parser = ArgumentParser(prog=name, description=description)
-    # Generic args common to every command
-    parser.add_argument("--version", action="version", version="{0} {1}".format(name, version))
-    parser.add_argument(
-        "--console",
-        action="store_true",
-        default=False,
-        help="Log to console (defaults to %(default).",
-    )
-    parser.add_argument(
-        "--log-file",
-        type=str,
-        metavar="<FILE>",
-        default=None,
-        help="Log to file (defaults to %(default).",
-    )
-    parser.add_argument(
-        "--log-level", choices=LogLevel, default=None, help="Log level (defaults to %(default)"
-    )
-    parser.add_argument("--trace", action="store_true", help="Show exception stack trace.")
-    return parser
 
 
 async def _wrapped_main(
@@ -51,43 +31,32 @@ async def _wrapped_main(
     args: Namespace,
     name: str,
     version: str,
-    log_rotate: bool,
-    log_fmt: str | None,
+    logger: Logger
 ) -> None:
     """Internal coroutine that starts logging thread and the main coroutine"""
     global listener
-    listener = root_logger(args.log_level, args.console, args.log_file, log_rotate, log_fmt)
+    listener = logger.configure()
     listener.start()
     log.info("============== %s %s ==============", name, version)
     await main_func(args)
 
 
-def execute(
+def run_cli(
     main_func: Callable[[Namespace], Coroutine[Any, Any, None]],
-    add_args_func: Callable[[ArgumentParser], None],
+    args: Namespace,
     name: str,
     version: str,
-    description: str,
-    log_rotate: bool = False,
-    log_fmt: str | None = None,
-) -> None:
-    """
-    Utility entry point
-    """
+    logger: Logger,
+) -> int:
+    return_code = 1
     try:
-        return_code = 1
-        parser = arg_parser(name, version, description)
-        add_args_func(parser)  # Adds more arguments
-        args = parser.parse_args(sys.argv[1:])
-        asyncio.run(_wrapped_main(main_func, args, name, version, log_rotate, log_fmt))
+        logger.additional_args(args)
+        asyncio.run(_wrapped_main(main_func, args, name, version, logger))
         return_code = 0
     except KeyboardInterrupt:
-        log.critical("[%s] Interrupted by user ", name)
+        log.critical("[%s] Interrupted by user", name)
     except Exception as e:
-        log.critical("[%s] Fatal error => %s", name, str(e))
+        log.critical("[%s] Fatal error => %s", name, e)
         if args.trace:
             traceback.print_exc()
-    finally:
-        if listener:
-            listener.stop()
-        sys.exit(return_code)
+    return return_code

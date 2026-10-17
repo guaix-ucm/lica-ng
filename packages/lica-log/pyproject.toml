@@ -19,6 +19,11 @@ classifiers = [
 
 dependencies = []
 
+[project.optional-dependencies]
+textual = [
+    "textual >= 8.2"
+]
+
 [[tool.uv.index]]
 name = "testpypi"
 url = "https://test.pypi.org/simple/"

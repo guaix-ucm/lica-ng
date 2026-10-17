@@ -10,6 +10,7 @@
 import logging
 from enum import StrEnum
 
+
 class LogLevel(StrEnum):
     NOTSET = "notset"
     CRITICAL = "critical"
@@ -18,7 +19,8 @@ class LogLevel(StrEnum):
     INFO = "info"
     DEBUG = "debug"
 
-__MAP = {
+
+__MAP__ = {
     LogLevel.NOTSET: logging.NOTSET,
     LogLevel.CRITICAL: logging.CRITICAL,
     LogLevel.ERROR: logging.ERROR,
@@ -28,4 +30,4 @@ __MAP = {
 }
 
 def to_std_logging(level: LogLevel) -> int:
-    return __MAP[level]
+    return __MAP__[level]

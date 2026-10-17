@@ -1,2 +1,2 @@
-from .startup import execute
-__all__ = ["execute"]
+from .startup import parse_args, run_cli
+__all__ = ["parse_args", "run_cli"]
