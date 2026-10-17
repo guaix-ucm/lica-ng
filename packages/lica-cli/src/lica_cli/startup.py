@@ -58,7 +58,7 @@ def execute(
         parser = arg_parser(name, version, description)
         add_args_func(parser)  # Adds more arguments
         args = parser.parse_args(sys.argv[1:])
-        root_logger(log_level, args.console, args.log_file, log_rotate, log_fmt)
+        root_logger(args.log_level, args.console, args.log_file, log_rotate, log_fmt)
         log.info(f"============== {name} {version} ==============")
         main_func(args)
         return_code = 0
