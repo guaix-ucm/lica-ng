@@ -1,0 +1,25 @@
+# ===============================
+# WORKSPACE MASTER PYPROJECT FILE
+# ===============================
+
+# Every subproject here may have a separate entry in PyPi
+# tagging must be per-project. Example: git tag azotea-cli-0.1.0
+[tool.uv.workspace]
+members = [
+    "packages/lica-log",
+    "packages/lica-cli",
+]
+
+[tool.uv.sources]
+lica-log = { workspace = true }
+lica-cli = { workspace = true }
+
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
