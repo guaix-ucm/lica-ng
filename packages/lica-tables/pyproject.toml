@@ -21,7 +21,8 @@ dependencies = []
 
 [project.optional-dependencies]
 tabulate = [
-   "tabulate",
+    "tabulate >= 0.10",
+    "types-tabulate >= 0.10",
 ]
 
 [[tool.uv.index]]
