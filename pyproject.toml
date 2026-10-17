@@ -8,11 +8,13 @@
 members = [
     "packages/lica-log",
     "packages/lica-cli",
+    "packages/lica-tables",
 ]
 
 [tool.uv.sources]
 lica-log = { workspace = true }
 lica-cli = { workspace = true }
+lica-tables = { workspace = true }
 
 
 [build-system]
