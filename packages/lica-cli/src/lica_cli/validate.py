@@ -13,16 +13,12 @@
 import math
 import os
 import fractions
-import functools
 
 from datetime import datetime
-from typing import Union
-from collections.abc import Sequence
 
 # ------------------------
 # Module utility functions
 # ------------------------
-
 
 def vfile(path: str) -> str:
     """File validator for the command line interface"""
@@ -134,7 +130,7 @@ def vflopath(value: str | float) -> str | float:
     try:
         n = float(fractions.Fraction(value))
     except ValueError:
-        if not os.path.isfile(value):
+        if not os.path.isfile(str(value)):
             raise IOError(f"Not valid or existing file: {value}")
         return value
     return n
