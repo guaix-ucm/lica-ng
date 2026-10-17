@@ -13,6 +13,7 @@ members = [
 lica-log = { workspace = true }
 lica-cli = { workspace = true }
 lica-tables = { workspace = true }
+lica-sqa= { workspace = true }
 
 [build-system]
 requires = ["uv_build>=0.13.1,<0.14"]
