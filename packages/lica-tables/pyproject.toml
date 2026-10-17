@@ -17,8 +17,11 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Astronomy",
 ]
 
-dependencies = [
-    "tabulate"
+dependencies = []
+
+[project.optional-dependencies]
+tabulate = [
+   "tabulate",
 ]
 
 [[tool.uv.index]]
