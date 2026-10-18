@@ -44,13 +44,13 @@ test-publish pkg:
     set -exuo pipefail
     pkg={{pkg}}
     module="${pkg//-/_}"
-    uv publish --index testpypi ${pkg]}
-    uv run --index https://test.pypi.org/simple/ --with ${pkg]} --no-project python -c "from ${module} import __version__; print(__version__)"
+    uv publish --index testpypi ${pkg}
+    uv run --index "https://test.pypi.org/simple/" --with ${pkg} --no-project python -c "from ${module} import __version__; print(__version__)"
 
 publish pkg:
     #!/usr/bin/env bash
     set -exuo pipefail
     pkg={{pkg}}
     module="${pkg//-/_}"
-    uv publish ${pkg]}
-    uv run --index https://test.pypi.org/simple/ --with ${pkg]} --no-project python -c "from ${module} import __version__; print(__version__)"
+    uv publish ${pkg}
+    uv run --with ${pkg} --no-project python -c "from ${module} import __version__; print(__version__)"
