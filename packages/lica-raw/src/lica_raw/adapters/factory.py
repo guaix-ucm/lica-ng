@@ -11,19 +11,23 @@ import os
 # ----------------
 # Own dependencies
 # ----------------
+from ..errors import UnsupportedImageFormatError
 from ..ports import ImageReader, ImageReaderFactory
-from .exif import ExifReader
-from .fits import FitsReader
 
-FITS_EXTENSIONS = ('.fit',  '.fits', '.fts')
+FITS_EXTENSIONS = (".fit", ".fits", ".fts")
 
-def is_fits(path: str) -> bool:
-    _, ext = os.path.splitext(path)
-    return ext.lower() in FITS_EXTENSIONS
+RAW_EXTENSIONS = (".nef", ".cr2", ".cr3", ".arw", ".raf", ".orf", ".dng", ".rw2")
+
 
 class ImageReaderFactoryImpl(ImageReaderFactory):
     def get_reader(self, path: str) -> ImageReader:
-        if is_fits(path):
+        ext = os.path.splitext(path)[1].lower()
+        if ext in FITS_EXTENSIONS:
+            from .fits import FitsReader
+
             return FitsReader()
-        else:
+        if ext in RAW_EXTENSIONS:
+            from .exif import ExifReader
+
             return ExifReader()
+        raise UnsupportedImageFormatError(path)

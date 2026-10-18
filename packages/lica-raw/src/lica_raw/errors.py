@@ -12,6 +12,9 @@
 class RawBaseError(Exception):
     """Raw library base error"""
 
+class UnsupportedImageFormatError(Exception):
+    """Unsupported image format"""
+
 
 class UnsupportedCFAError(RawBaseError):
     """Unsupported Color Filter Array"""
@@ -33,5 +36,5 @@ class MissingImageError(RawBaseError):
     """Image path does not exists"""
 
 
-class MissingMandatorFitsError(RawBaseError):
+class MissingMandatoryFitsError(RawBaseError):
     """Missing mandatory keywords in FITS image"""

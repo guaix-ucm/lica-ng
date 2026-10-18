@@ -23,7 +23,7 @@ from ..types import BayerIndex, BayerPattern, HeaderType, IntArray2D
 
 from ..errors import (
     MissingImageError,
-    MissingMandatorFitsError,
+    MissingMandatoryFitsError,
     OutOfBoundsError,
     UnknownDateTimeFormatError,
 )
@@ -118,7 +118,7 @@ class FitsReader(ImageReader):
             header = hdul[0].header
             available = set(header.keys())
             if not self.MANDATORY_KEYWORDS < available:
-                raise MissingMandatorFitsError(self.MANDATORY_KEYWORDS - available)
+                raise MissingMandatoryFitsError(self.MANDATORY_KEYWORDS - available)
             width = header[NAXIS1]
             height = header[NAXIS2]
             make = None
@@ -164,7 +164,7 @@ class FitsReader(ImageReader):
         return FitsRawPixels(hdul)
 
 
-class FitsRawPixels:
+class FitsRawPixels(RawPixels):
     def __init__(self, hdul: HDUList) -> None:
         self.hdul = hdul
         header = hdul[0].header
@@ -173,12 +173,14 @@ class FitsRawPixels:
         pattern = BayerPattern(header[BAYERPAT])
         self.coords = bayer_layout(pattern)
 
+    def close(self) -> None:
+        if self.hdul is not None:
+            self.hdul.close()
+            self.hdul = None
+
     def __del__(self) -> None:
         try:
-            if self.hdul is not None:
-                self.black_levels = None
-                self.shape = None
-                self.hdul.close()
+            self.close()
         finally:
             self.hdul = None
 

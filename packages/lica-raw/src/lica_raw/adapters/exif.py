@@ -138,20 +138,23 @@ class ExifReader(ImageReader):
         return ExifRawPixels(raw)
 
 
-class ExifRawPixels:
+class ExifRawPixels(RawPixels):
     def __init__(self, raw: RawPy) -> None:
         self.img = raw
         self.black_levels = raw.black_level_per_channel
         self.shape = raw.raw_image.shape
         self.pattern = raw.raw_pattern
 
+    def close(self) -> None:
+        if self.img is not None:
+            self.img.close()
+            self.img = None
+
     # No context managers here, we need to keep the internal numpy
     # raw_pixels array alive while statistics are being computed
     def __del__(self) -> None:
         try:
             if self.img is not None:
-                self.black_levels = None
-                self.shape = None
                 self.img.close()
         finally:
             self.img = None

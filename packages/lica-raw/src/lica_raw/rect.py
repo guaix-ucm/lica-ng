@@ -12,10 +12,10 @@ from typing import NamedTuple
 # ----------------
 # Own dependencies
 # ----------------
-from azotea_cli.common.errors import AzoteaError
+from .errors import RawBaseError
 
 
-class InvalidRectStringError(AzoteaError):
+class InvalidRectStringError(RawBaseError):
     """Rectangle string incorrectly formatted"""
 
 

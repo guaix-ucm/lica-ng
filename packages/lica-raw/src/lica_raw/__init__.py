@@ -1,6 +1,6 @@
 from .errors import (
     MissingImageError,
-    MissingMandatorFitsError,
+    MissingMandatoryFitsError,
     OutOfBoundsError,
     ReadMetadataError,
     UnknownDateTimeFormatError,
@@ -26,6 +26,6 @@ __all__ = [
     "ReadMetadataError",
     "UnknownDateTimeFormatError",
     "MissingImageError",
-    "MissingMandatorFitsError",
+    "MissingMandatoryFitsError",
     "OutOfBoundsError",
 ]

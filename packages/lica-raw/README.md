@@ -229,7 +229,7 @@ All package-specific errors derive from `RawBaseError`.
 | `UnknownDateTimeFormatError` | The observation-date string uses an unsupported format. |
 | `OutOfBoundsError` | The requested rectangular section lies outside the image. |
 | `MissingImageError` | The image path does not exist. |
-| `MissingMandatorFitsError` | One or more mandatory FITS keywords are missing. |
+| `MissingMandatoryFitsError` | One or more mandatory FITS keywords are missing. |
 
 ## Usage example
 
