@@ -1,2 +1,2 @@
 # lica-tables
-Interface and default implementation to display tables on terminal screens
+Interface and default implementation to use a SQLLachemy database specified by an environment variable.
