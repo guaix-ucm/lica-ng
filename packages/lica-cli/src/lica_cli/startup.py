@@ -14,11 +14,9 @@ from typing import Callable
 from collections.abc import
 
 from lica_log import Logger
-from .common import create_arg_parser
 
 # get the root logger
 log = logging.getLogger()
-
 
 
 def run_cli(
@@ -30,7 +28,6 @@ def run_cli(
 ) -> int:
     return_code = 1
     try:
-        logger.additional_args(args)
         logger.configure()
         log.info("============== %s %s ==============", name, version)
         main_func(args)

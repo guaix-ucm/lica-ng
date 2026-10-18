@@ -6,12 +6,15 @@
 # ----------------
 # Standard library
 # ----------------
-from argparse import ArgumentParser
-import sys
 
+import sys
 from argparse import ArgumentParser, Namespace
 from typing import Callable
-from collections.abc import
+
+# ---------------------
+# Third party libraries
+# ---------------------
+from lica_log import LogLevel
 
 def _create_arg_parser(name: str, version: str, description: str) -> ArgumentParser:
     # create the top-level parser

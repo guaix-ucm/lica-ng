@@ -2,7 +2,6 @@
 # Copyright (c) 2026
 #
 # See the LICENSE file for details
-# see the AUTHORS file for authors
 # ----------------------------------------------------------------------
 # ----------------
 # Standard library
@@ -16,7 +15,7 @@ from typing import Any, Callable, Coroutine
 # ----------------
 # Own dependencies
 # ----------------
-from lica_log import Logger
+from lica_log.asyncio import AsyncLogger
 
 # get the root logger
 log = logging.getLogger()
@@ -27,7 +26,7 @@ async def _wrapped_main(
     args: Namespace,
     name: str,
     version: str,
-    logger: Logger,
+    logger: AsyncLogger,
 ) -> None:
     """Internal coroutine that starts logging thread and the main coroutine"""
     global listener
@@ -42,11 +41,10 @@ def run_cli(
     args: Namespace,
     name: str,
     version: str,
-    logger: Logger,
+    logger: AsyncLogger,
 ) -> int:
     return_code = 1
     try:
-        logger.additional_args(args)
         asyncio.run(_wrapped_main(main_func, args, name, version, logger))
         return_code = 0
     except KeyboardInterrupt:
