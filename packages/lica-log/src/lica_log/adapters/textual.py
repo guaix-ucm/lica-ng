@@ -13,7 +13,7 @@ from argparse import Namespace
 from logging import StreamHandler
 from logging.handlers import TimedRotatingFileHandler, WatchedFileHandler
 
-import textual.logging
+import textual.logging  # pyright: ignore[reportMissingImports]
 
 from .. import Logger
 from ..common import to_std_logging
@@ -26,14 +26,11 @@ from ..common import to_std_logging
 log = logging.getLogger()
 
 
-
 class DefaultLogger(Logger):
     def __init__(self, args: Namespace, fmt: str | None = None, rotate: bool = False) -> None:
         self.args = args
         self.rotate = rotate
-        self.fmt = (
-            "%(asctime)s [%(levelname)-8s] %(message)s" if fmt is None else fmt
-        )
+        self.fmt = "%(asctime)s [%(levelname)-8s] %(message)s" if fmt is None else fmt
 
     def configure(self) -> None:
         # set the root logger level
