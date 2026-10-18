@@ -20,9 +20,11 @@ default:
 # Workspace management
 # --------------------
 
+# Creates virtual env
 init:
     uv sync
 
+# sets the packahe version and modifies pyproject.toml
 version pkg version:
     uv version --package {{pkg}} {{version}}
 
@@ -36,3 +38,19 @@ build pkg="":
     else
          uv build --all-packages
     fi
+
+test-publish pkg:
+    #!/usr/bin/env bash
+    set -exuo pipefail
+    pkg={{pkg}}
+    module="${pkg//-/_}"
+    uv publish --index testpypi ${pkg]}
+    uv run --index https://test.pypi.org/simple/ --with ${pkg]} --no-project python -c "from ${module} import __version__; print(__version__)"
+
+publish pkg:
+    #!/usr/bin/env bash
+    set -exuo pipefail
+    pkg={{pkg}}
+    module="${pkg//-/_}"
+    uv publish ${pkg]}
+    uv run --index https://test.pypi.org/simple/ --with ${pkg]} --no-project python -c "from ${module} import __version__; print(__version__)"
