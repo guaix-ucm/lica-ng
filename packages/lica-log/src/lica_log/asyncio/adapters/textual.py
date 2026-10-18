@@ -48,7 +48,7 @@ class TextualAsyncLogger(AsyncLogger):
 
     def configure(self) -> QueueListener:
         # set the root logger level
-        log.setLevel(to_std_logging(self.args.level))
+        log.setLevel(to_std_logging(self.args.log_level))
         # Log formatter
         # fmt = logging.Formatter('%(asctime)s - %(name)s [%(levelname)s] %(message)s')
         fmt = logging.Formatter(self.fmt)
