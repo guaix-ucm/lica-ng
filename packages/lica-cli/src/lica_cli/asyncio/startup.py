@@ -10,7 +10,7 @@ import asyncio
 import logging
 import traceback
 from argparse import Namespace
-from typing import Any, Callable, Coroutine
+from typing import Any, Awaitable, Callable
 
 # ----------------
 # Own dependencies
@@ -21,31 +21,20 @@ from lica_log.asyncio import AsyncLogger
 log = logging.getLogger()
 
 
-async def _wrapped_main(
-    main_func: Callable[[Namespace], Coroutine[Any, Any, None]],
-    args: Namespace,
-    name: str,
-    version: str,
-    logger: AsyncLogger,
-) -> None:
-    """Internal coroutine that starts logging thread and the main coroutine"""
-    global listener
-    listener = logger.configure()
-    listener.start()
-    log.info("============== %s %s ==============", name, version)
-    await main_func(args)
-
-
 def run_cli(
-    main_func: Callable[[Namespace], Coroutine[Any, Any, None]],
+    main_func: Callable[[Namespace], Awaitable[None]],
     args: Namespace,
     name: str,
     version: str,
     logger: AsyncLogger,
 ) -> int:
     return_code = 1
+    listener = None
     try:
-        asyncio.run(_wrapped_main(main_func, args, name, version, logger))
+        listener = logger.configure()
+        listener.start()
+        log.info("============== %s %s ==============", name, version)
+        asyncio.run(main_func(args))
         return_code = 0
     except KeyboardInterrupt:
         log.critical("[%s] Interrupted by user", name)
@@ -53,4 +42,8 @@ def run_cli(
         log.critical("[%s] Fatal error => %s", name, e)
         if args.trace:
             traceback.print_exc()
+    finally:
+        if listener is not None:
+            listener.stop()
+
     return return_code
