@@ -23,7 +23,7 @@ dependencies = [
 ]
 ```
 
-For FITS image support, `lica-raw[fits]` installs the deeded dependency on `astropy`:
+For FITS image support, `lica-raw[fits]` installs the needed dependency on `astropy`:
 
 ```toml
 [project]
