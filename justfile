@@ -44,7 +44,7 @@ test-publish pkg:
     set -exuo pipefail
     pkg={{pkg}}
     module="${pkg//-/_}"
-    uv publish --index testpypi ${pkg}
+    uv publish --index testpypi ${pkg} --verbose --directory packages/${pkg}
     uv run --index "https://test.pypi.org/simple/" --with ${pkg} --no-project python -c "from ${module} import __version__; print(__version__)"
 
 publish pkg:
