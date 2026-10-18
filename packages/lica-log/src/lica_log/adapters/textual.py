@@ -2,7 +2,6 @@
 # Copyright (c) 2026
 #
 # See the LICENSE file for details
-# see the AUTHORS file for authors
 # ----------------------------------------------------------------------
 
 # -----------------
@@ -17,7 +16,7 @@ from logging.handlers import TimedRotatingFileHandler, WatchedFileHandler
 import textual.logging
 
 from .. import Logger
-from ..common import LogLevel, to_std_logging
+from ..common import to_std_logging
 
 # -----------------------
 # Module global variables
@@ -27,26 +26,18 @@ from ..common import LogLevel, to_std_logging
 log = logging.getLogger()
 
 
-class TextualLogger(Logger):
-    def __init__(self, fmt_str: str | None = None, rotate: bool = False) -> None:
-        self.level = LogLevel.INFO
-        self.console = True
-        self.log_file = None
-        self.rotate = rotate
-        self.textual = True
-        self.fmt = (
-            "%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s" if fmt_str is None else fmt_str
-        )
 
-    def additional_args(self, args: Namespace) -> None:
-        self.level = args.log_level
-        self.console = args.console
-        self.log_file = args.log_file
-        self.textual = args.textual
+class DefaultLogger(Logger):
+    def __init__(self, args: Namespace, fmt: str | None = None, rotate: bool = False) -> None:
+        self.args = args
+        self.rotate = rotate
+        self.fmt = (
+            "%(asctime)s [%(levelname)-8s] %(message)s" if fmt is None else fmt
+        )
 
     def configure(self) -> None:
         # set the root logger level
-        log.setLevel(to_std_logging(self.level))
+        log.setLevel(to_std_logging(self.args.level))
         # Log formatter
         # fmt = logging.Formatter('%(asctime)s - %(name)s [%(levelname)s] %(message)s')
         fmt = logging.Formatter(self.fmt)
@@ -54,24 +45,24 @@ class TextualLogger(Logger):
         for h in log.handlers:
             log.removeHandler(h)
         # create console handler and set level to debug
-        if self.console:
+        if self.args.console:
             ch = StreamHandler()
             ch.setFormatter(fmt)
             ch.setLevel(logging.DEBUG)
             log.addHandler(ch)
-        if self.textual:
+        if self.args.textual:
             ch = textual.logging.TextualHandler()
             ch.setFormatter(fmt)
             ch.setLevel(logging.DEBUG)
             log.addHandler(ch)
         # Create a file handler suitable for logrotate usage
-        if self.log_file:
+        if self.args.log_file:
             fh = (
                 TimedRotatingFileHandler(
-                    self.log_file, when="midnight", interval=1, backupCount=365
+                    self.args.log_file, when="midnight", interval=1, backupCount=365
                 )
                 if self.rotate
-                else WatchedFileHandler(self.log_file)
+                else WatchedFileHandler(self.args.log_file)
             )
             fh.setFormatter(fmt)
             fh.setLevel(logging.DEBUG)
