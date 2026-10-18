@@ -10,7 +10,6 @@ import logging
 import traceback
 from argparse import Namespace
 from typing import Callable
-from collections.abc import
 
 from lica_log import Logger
 

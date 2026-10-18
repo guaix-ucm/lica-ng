@@ -21,7 +21,7 @@ from logging.handlers import (
 # -------------------
 # Thrid party imports
 # --------------------
-import textual.logging
+import textual.logging  # pyright: ignore[reportMissingImports]
 
 # ----------------
 # Own dependencies
