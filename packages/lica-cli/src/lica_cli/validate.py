@@ -1,24 +1,22 @@
-# -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------
-# Copyright (c) 2021
+# Copyright (c) 2026
 #
 # See the LICENSE file for details
-# see the AUTHORS file for authors
 # ----------------------------------------------------------------------
 
-# --------------------
-# System wide imports
-#  -------------------
+# -----------------
+# Standard library
+#  ----------------
 
+import fractions
 import math
 import os
-import fractions
-
 from datetime import datetime
 
 # ------------------------
 # Module utility functions
 # ------------------------
+
 
 def vfile(path: str) -> str:
     """File validator for the command line interface"""

@@ -9,21 +9,17 @@
 # ----------------
 import asyncio
 import logging
-import sys
 import traceback
-from argparse import ArgumentParser, Namespace
+from argparse import Namespace
 from typing import Any, Callable, Coroutine
 
-from lica_log import LogLevel
-from lica_log.asyncio.logging import root_logger
-
+# ----------------
+# Own dependencies
+# ----------------
 from lica_log import Logger
-from ...common import create_arg_parser
 
 # get the root logger
 log = logging.getLogger()
-
-
 
 
 async def _wrapped_main(
@@ -31,7 +27,7 @@ async def _wrapped_main(
     args: Namespace,
     name: str,
     version: str,
-    logger: Logger
+    logger: Logger,
 ) -> None:
     """Internal coroutine that starts logging thread and the main coroutine"""
     global listener

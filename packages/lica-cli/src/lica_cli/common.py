@@ -2,14 +2,18 @@
 # Copyright (c) 2026
 #
 # See the LICENSE file for details
-# see the AUTHORS file for authors
 # ----------------------------------------------------------------------
 # ----------------
 # Standard library
 # ----------------
 from argparse import ArgumentParser
+import sys
 
-def create_arg_parser(name: str, version: str, description: str) -> ArgumentParser:
+from argparse import ArgumentParser, Namespace
+from typing import Callable
+from collections.abc import
+
+def _create_arg_parser(name: str, version: str, description: str) -> ArgumentParser:
     # create the top-level parser
     parser = ArgumentParser(prog=name, description=description)
     # Generic args common to every command
@@ -32,3 +36,15 @@ def create_arg_parser(name: str, version: str, description: str) -> ArgumentPars
     )
     parser.add_argument("--trace", action="store_true", help="Show exception stack trace.")
     return parser
+
+
+
+def parse_args(
+    add_args_func: Callable[[ArgumentParser], None],
+    name: str,
+    version: str,
+    description: str,
+) -> Namespace:
+    parser = _create_arg_parser(name, version, description)
+    add_args_func(parser)
+    return parser.parse_args(sys.argv[1:])

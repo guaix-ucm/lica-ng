@@ -2,7 +2,6 @@
 # Copyright (c) 2026
 #
 # See the LICENSE file for details
-# see the AUTHORS file for authors
 # ----------------------------------------------------------------------
 # ----------------
 # Standard library
@@ -20,16 +19,6 @@ from .common import create_arg_parser
 # get the root logger
 log = logging.getLogger()
 
-
-def parse_args(
-    add_args_func: Callable[[ArgumentParser], None],
-    name: str,
-    version: str,
-    description: str,
-) -> Namespace:
-    parser = create_arg_parser(name, version, description)
-    add_args_func(parser)
-    return parser.parse_args(sys.argv[1:])
 
 
 def run_cli(
