@@ -22,6 +22,22 @@ pip install "lica-log[textual]"
 
 or add to your `pyproject.toml` dependencies list
 
+or add it to your `pyproject.toml`:
+
+```toml
+[project]
+dependencies = [
+    "lica-log",
+]
+```
+
+For a Textual-based application:
+
+```toml
+[project]
+dependencies = [
+    "lica-log[textual]",
+]
 ```
 
 ## Interfaces
@@ -54,7 +70,7 @@ class AsyncLogger(Protocol):
 | Adapter | Module | Extra | Description |
 |---|---|---|---|
 | `DefaultLogger` | `lica_log.adapters.default` | — | Configures the root logger using console and/or file handlers. |
-| `DefaultLogger` | `lica_log.adapters.textual` | `textual` | Configures the root logger for Textual applications, adding a `textual.logging.TextualHandler` when requested. |
+| `TextualLogger` | `lica_log.adapters.textual` | `textual` | Configures the root logger for Textual applications, adding a `textual.logging.TextualHandler` when requested. |
 
 Both adapters accept a parsed `argparse.Namespace`, an optional log format, and a rotation flag:
 
@@ -62,11 +78,11 @@ Both adapters accept a parsed `argparse.Namespace`, an optional log format, and 
 DefaultLogger(args: Namespace, fmt: str | None = None, rotate: bool = False) -> None
 ```
 
-The default log format string is `"%(asctime)s [%(levelname)-8s] %(message)s"`.  Another useful format string to be passed when debugging as argument can be `"%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s"`.
+The default log format string is `"%(asctime)s [%(levelname)-8s] %(message)s"`.  Another useful format string to be passed when debugging when creating the adapter can be `"%(asctime)s [%(levelname)-8s] [%(name)s] %(message)s"`.
 
 The expected namespace attributes are:
 
-- `log_level`: logging level, of type `lica_cli.LogLevel`.
+- `log_level`: logging level, of type `lica_log.LogLevel`.
 - `console`: enables a `StreamHandler` when true.
 - `log_file`: path to a log file; enables file logging when set.
 - `textual`: enables the Textual log handler in the Textual adapter.

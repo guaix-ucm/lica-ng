@@ -37,7 +37,7 @@ from .. import AsyncLogger
 log = logging.getLogger()
 
 
-class TextualAsyncLogger(AsyncLogger):
+class AsyncTextualLogger(AsyncLogger):
     def __init__(self, args: Namespace, fmt: str | None = None, rotate: bool = False) -> None:
         self.args = args
         self.rotate = rotate

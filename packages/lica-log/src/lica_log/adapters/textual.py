@@ -26,7 +26,7 @@ from ..common import to_std_logging
 log = logging.getLogger()
 
 
-class DefaultLogger(Logger):
+class TextualLogger(Logger):
     def __init__(self, args: Namespace, fmt: str | None = None, rotate: bool = False) -> None:
         self.args = args
         self.rotate = rotate
