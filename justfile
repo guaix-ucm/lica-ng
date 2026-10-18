@@ -33,7 +33,7 @@ build pkg="":
     #!/usr/bin/env bash
     set -exuo pipefail
     pkg={{pkg}}
-    if [ "${pkg}" != "" ]; then
+    if [[ "${pkg}" != "" ]]; then
          uv build --package ${pkg}
     else
          uv build --all-packages
