@@ -7,16 +7,13 @@
 # -----------------
 # Standard library
 # ----------------
-from typing import Protocol
-from logging.handlers import QueueListener
+
 
 # ----------------
 # Own dependencies
 # ----------------
-from ..common import LogLevel
+from ..types import LogLevel
+from ..common import to_std_logging
+from .ports import AsyncLogger
 
-class AsyncLogger(Protocol):
-    def configure(self) -> QueueListener: ...
-
-
-__all__ = ["LogLevel", "AsyncLogger"]
+__all__ = ["LogLevel", "AsyncLogger", "to_std_logging"]

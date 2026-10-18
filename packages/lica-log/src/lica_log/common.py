@@ -8,17 +8,11 @@
 # Standard library
 # ----------------
 import logging
-from enum import StrEnum
 
-
-class LogLevel(StrEnum):
-    NOTSET = "notset"
-    CRITICAL = "critical"
-    ERROR = "error"
-    WARN = "warn"
-    INFO = "info"
-    DEBUG = "debug"
-
+# ----------------
+# Own dependencies
+# ----------------
+from .types import LogLevel
 
 __MAP__ = {
     LogLevel.NOTSET: logging.NOTSET,
