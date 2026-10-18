@@ -6,10 +6,9 @@
 # ----------------
 # Standard library
 # ----------------
-import sys
 import logging
 import traceback
-from argparse import ArgumentParser, Namespace
+from argparse import Namespace
 from typing import Callable
 from collections.abc import
 
