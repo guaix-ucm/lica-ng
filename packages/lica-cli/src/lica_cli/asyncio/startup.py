@@ -10,7 +10,7 @@ import asyncio
 import logging
 import traceback
 from argparse import Namespace
-from typing import Any, Awaitable, Callable
+from typing import Any, Coroutine, Callable
 
 # ----------------
 # Own dependencies
@@ -22,7 +22,7 @@ log = logging.getLogger()
 
 
 def run_cli(
-    main_func: Callable[[Namespace], Awaitable[None]],
+    main_func: Callable[[Namespace], Coroutine[Any, Any, None]],
     args: Namespace,
     name: str,
     version: str,
