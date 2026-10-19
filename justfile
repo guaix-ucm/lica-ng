@@ -35,7 +35,8 @@ build pkg:
     #!/usr/bin/env bash
     set -exuo pipefail
     pkg={{pkg}}
-    uv build --package "${pkg}" --out-dir "dist/${pkg}"
+    rm -fr dist/${pkg}/*
+    uv build --package "${pkg}" --out-dir dist/${pkg}
 
 
 test-publish pkg:
