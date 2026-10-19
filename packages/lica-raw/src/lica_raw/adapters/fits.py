@@ -8,6 +8,7 @@
 # ----------------
 import os
 from datetime import datetime, timezone
+from types import TracebackType
 
 # ---------------------
 # Third party libraries
@@ -26,6 +27,7 @@ from ..errors import (
     MissingMandatoryFitsError,
     OutOfBoundsError,
     UnknownDateTimeFormatError,
+    AlreadyClosedError,
 )
 from ..models import ImageMetadata
 from ..ports import ImageReader, RawPixels
@@ -161,11 +163,12 @@ class FitsReader(ImageReader):
         if not os.path.isfile(path):
             raise MissingImageError(path)
         hdul = fits.open(path)
-        return FitsRawPixels(hdul)
+        return FitsRawPixels(hdul, path)
 
 
 class FitsRawPixels(RawPixels):
-    def __init__(self, hdul: HDUList) -> None:
+    def __init__(self, hdul: HDUList, path: str) -> None:
+        self.path= path
         self.hdul = hdul
         header = hdul[0].header
         self.black_levels = [header.get(PEDESTAL)] * 4
@@ -183,6 +186,19 @@ class FitsRawPixels(RawPixels):
             self.close()
         finally:
             self.hdul = None
+
+    def __enter__(self) -> "FitsRawPixels":
+            if self.hdul is None:
+                raise AlreadyClosedError(os.path.basename(self.path))
+            return self
+
+    def __exit__(
+            self,
+            exc_type: type[BaseException] | None,
+            exc_value: BaseException | None,
+            traceback: TracebackType | None,
+        ) -> None:
+            self.close()
 
     def _section(
         self,

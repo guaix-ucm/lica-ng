@@ -12,9 +12,11 @@
 class RawBaseError(Exception):
     """Raw library base error"""
 
-class UnsupportedImageFormatError(Exception):
+class UnsupportedImageFormatError(RawBaseError):
     """Unsupported image format"""
 
+class AlreadyClosedError(RawBaseError):
+    """Resource already closed"""
 
 class UnsupportedCFAError(RawBaseError):
     """Unsupported Color Filter Array"""

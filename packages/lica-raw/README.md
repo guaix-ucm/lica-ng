@@ -6,6 +6,8 @@
 
 The package supports Bayer colour-filter-array layouts, per-channel black levels, optional rectangular regions of interest, and automatic selection of a reader from the image file extension. Application code depends only on the `ImageReader`, `ImageReaderFactory`, and `RawPixels` protocols, while the concrete image-format behaviour is supplied by adapters.
 
+Objects returned by `read_pixels()` own the underlying image resource. They can be used as context managers, or closed explicitly with `close()` when batch processing makes a `with` block inconvenient.
+
 ## Installation
 
 Install `lica-raw` directly from the `lica-ng` Git repository:
@@ -64,8 +66,12 @@ class ImageReader(Protocol):
 
 ### Raw pixels
 
+`RawPixels` objects support the context-manager protocol. Entering the context returns the pixel-data object; leaving it closes the underlying image resource, even if an exception occurs.
+
 ```python
-from typing import Protocol
+from collections.abc import Generator
+from types import TracebackType
+from typing import Protocol, Self
 
 from lica_raw import IntArray2D, Rect
 
@@ -80,7 +86,20 @@ class RawPixels(Protocol):
     def gr_black(self) -> int: ...
     def gb_black(self) -> int: ...
     def b_black(self) -> int: ...
+
+    def close(self) -> None: ...
+
+    def __enter__(self) -> Self: ...
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None: ...
 ```
+
+`close()` is idempotent and can be called explicitly. This is useful in batch-processing loops where wrapping every image in a `with` block would make the client code unnecessarily nested.
 
 ### Reader factory
 
@@ -153,7 +172,7 @@ The supported Bayer patterns are defined in the `BayerPattern` enum as follows:
 - `GRBG`
 - `GBRG`
 
-The supported image types are defined in the `ImageType` enum as follows::
+The supported image types are defined in the `ImageType` enum as follows:
 
 - `BIAS`
 - `DARK`
@@ -218,6 +237,29 @@ blue = pixels.b(section)
 
 A section outside the valid area raises `OutOfBoundsError`.
 
+## Resource management
+
+`read_pixels()` returns an object that owns an open image resource. Prefer a context manager when the lifetime of the pixels is limited to a local block:
+
+```python
+with reader.read_pixels(path) as pixels:
+    red = pixels.r(None)
+```
+
+For batch processing, explicit closing is equally valid:
+
+```python
+for path in image_paths:
+    pixels = reader.read_pixels(path)
+    try:
+        red = pixels.r(None)
+        ...
+    finally:
+        pixels.close()
+```
+
+After `close()`, the pixel object must not be used to access image data.
+
 ## Errors
 
 All package-specific errors derive from `RawBaseError`.
@@ -230,6 +272,7 @@ All package-specific errors derive from `RawBaseError`.
 | `OutOfBoundsError` | The requested rectangular section lies outside the image. |
 | `MissingImageError` | The image path does not exist. |
 | `MissingMandatoryFitsError` | One or more mandatory FITS keywords are missing. |
+| `AlreadyClosedError` | Attempt to close an already closed FITS/EXIF image. |
 
 ## Usage example
 
@@ -246,15 +289,19 @@ metadata = reader.read_metadata(path)
 print(metadata.model, metadata.width, metadata.height)
 print(metadata.bayer, metadata.exptime, metadata.timestamp)
 
-pixels = reader.read_pixels(path)
+with reader.read_pixels(path) as pixels:
+    # Gets the whole channel when section is None.
+    red = pixels.r(None)
+    green_red = pixels.gr(Rect(0, 0, 256, 256))
+    green_blue = pixels.gb(Rect(0, 0, 256, 256))
+    blue = pixels.b(Rect(0, 0, 256, 256))
 
-# gets the whole image if section is None
-red = pixels.r(None)
-green_red = pixels.gr(Rect(0, 0, 256, 256))
-green_blue = pixels.gb(Rect(0, 0, 256, 256))
-blue = pixels.b(Rect(0, 0, 256, 256))
-
-print(pixels.r_black(), pixels.gr_black(), pixels.gb_black(), pixels.b_black())
+    print(
+        pixels.r_black(),
+        pixels.gr_black(),
+        pixels.gb_black(),
+        pixels.b_black(),
+    )
 ```
 
 ## Usage example, with lica-cli package
@@ -283,9 +330,9 @@ def cli_main(args: Namespace) -> None:
     metadata = reader.read_metadata(args.image)
     print(metadata)
 
-    # gets the whole image if section is None
-    pixels = reader.read_pixels(args.image)
-    print("Red channel shape:", pixels.r(None).shape)
+    with reader.read_pixels(args.image) as pixels:
+        # Gets the whole channel when section is None.
+        print("Red channel shape:", pixels.r(None).shape)
 
 
 def main():

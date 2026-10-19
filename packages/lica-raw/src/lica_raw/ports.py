@@ -6,16 +6,16 @@
 # ----------------
 # Standard library
 # ----------------
-from typing import Protocol
+from types import TracebackType
+from typing import Protocol, Self
 
 # ----------------
 # Own dependencies
 # ----------------
-
-from .types import HeaderType, IntArray2D
-from .rect import Rect
-
 from .models import ImageMetadata
+from .rect import Rect
+from .types import HeaderType, IntArray2D
+
 
 class RawPixels(Protocol):
     def r(self, section: Rect | None) -> IntArray2D: ...
@@ -28,6 +28,15 @@ class RawPixels(Protocol):
     def gb_black(self) -> int: ...
     def b_black(self) -> int: ...
 
+    def __enter__(self) -> Self: ...
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None: ...
+
 
 class ImageReader(Protocol):
     def header_type(self) -> HeaderType: ...
@@ -36,11 +45,12 @@ class ImageReader(Protocol):
         """returns an instance of ImageMetadata dataclass"""
         ...
 
-    def read_pixels(self, path:  str) -> RawPixels:
+    def read_pixels(self, path: str) -> RawPixels:
         """returns an object that implements the RawPixels interface"""
         ...
 
+
 class ImageReaderFactory(Protocol):
-    def get_reader(self, path:  str) -> ImageReader:
+    def get_reader(self, path: str) -> ImageReader:
         """returns an object that implements the ImageReader interface"""
         ...

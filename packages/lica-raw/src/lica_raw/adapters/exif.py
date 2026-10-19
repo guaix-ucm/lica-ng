@@ -11,6 +11,7 @@ import os
 from datetime import datetime, timezone
 from fractions import Fraction
 from typing import Any, Mapping
+from types import TracebackType
 
 # ---------------------
 # Third party libraries
@@ -32,6 +33,7 @@ from ..errors import (
     ReadMetadataError,
     UnknownDateTimeFormatError,
     UnsupportedCFAError,
+    AlreadyClosedError,
 )
 from ..models import ImageMetadata
 from ..ports import ImageReader, RawPixels
@@ -135,11 +137,12 @@ class ExifReader(ImageReader):
         if not os.path.isfile(path):
             raise MissingImageError(path)
         raw = rawpy.imread(path)
-        return ExifRawPixels(raw)
+        return ExifRawPixels(raw, path)
 
 
 class ExifRawPixels(RawPixels):
-    def __init__(self, raw: RawPy) -> None:
+    def __init__(self, raw: RawPy, path: str) -> None:
+        self.path = path
         self.img = raw
         self.black_levels = raw.black_level_per_channel
         self.shape = raw.raw_image.shape
@@ -158,6 +161,19 @@ class ExifRawPixels(RawPixels):
                 self.img.close()
         finally:
             self.img = None
+
+    def __enter__(self) -> "ExifRawPixels":
+            if self.img is None:
+                raise AlreadyClosedError(os.path.basename(self.path))
+            return self
+
+    def __exit__(
+            self,
+            exc_type: type[BaseException] | None,
+            exc_value: BaseException | None,
+            traceback: TracebackType | None,
+        ) -> None:
+            self.close()
 
     def _section(
         self,
