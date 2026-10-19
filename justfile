@@ -44,12 +44,6 @@ test-publish pkg:
     set -exuo pipefail
     pkg={{pkg}}
     module="${pkg//-/_}"
-
-    test -n "$(find "dist/${pkg}" -maxdepth 1 -type f \( -name '*.whl' -o -name '*.tar.gz' \) -print -quit)" || {
-            echo "No distributions found in dist/${pkg}" >&2
-            exit 1
-        }
-
     uvx uv-publish --repository testpypi --verbose "dist/${pkg}/*"
     uv run --index "https://test.pypi.org/simple/" --with ${pkg} --no-project python -c "from ${module} import __version__; print(__version__)"
 
