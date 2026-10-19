@@ -12,6 +12,10 @@
 class RawBaseError(Exception):
     """Raw library base error"""
 
+    def __str__(self):
+        msg = self.__doc__
+        return f"{msg}: {self.args[0]}." if self.args else f"{msg}."
+
 
 class UnsupportedImageFormatError(RawBaseError):
     """Unsupported image format"""
