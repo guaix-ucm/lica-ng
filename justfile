@@ -19,6 +19,8 @@ default:
 # --------------------
 # Workspace management
 # --------------------
+tools:
+    uv tool install uv-publish
 
 # Creates virtual env
 init:
@@ -29,22 +31,25 @@ version pkg version:
     uv version --package {{pkg}} {{version}}
 
 # Build the package
-build pkg="":
+build pkg:
     #!/usr/bin/env bash
     set -exuo pipefail
     pkg={{pkg}}
-    if [[ "${pkg}" != "" ]]; then
-         uv build --package ${pkg}
-    else
-         uv build --all-packages
-    fi
+    uv build --package "${pkg}" --out-dir "dist/${pkg}"
+
 
 test-publish pkg:
     #!/usr/bin/env bash
     set -exuo pipefail
     pkg={{pkg}}
     module="${pkg//-/_}"
-    uv publish --index testpypi ${pkg} --verbose --directory packages/${pkg}
+
+    test -n "$(find "dist/${pkg}" -maxdepth 1 -type f \( -name '*.whl' -o -name '*.tar.gz' \) -print -quit)" || {
+            echo "No distributions found in dist/${pkg}" >&2
+            exit 1
+        }
+
+    uvx uv-publish --repository testpypi --verbose "dist/${pkg}/*"
     uv run --index "https://test.pypi.org/simple/" --with ${pkg} --no-project python -c "from ${module} import __version__; print(__version__)"
 
 publish pkg:

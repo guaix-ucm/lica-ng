@@ -7,6 +7,14 @@
 # standard library
 # ----------------
 import logging
+from importlib.metadata import PackageNotFoundError, version
+
+try:
+    __version__ = version("lica-sqa")
+except PackageNotFoundError:
+    __version__ = "0.0.0+dev"
+
+
 from .ports import Database
 from .metadata import Model, metadata
 from .view import view
