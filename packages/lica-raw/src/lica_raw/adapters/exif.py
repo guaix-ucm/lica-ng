@@ -83,7 +83,7 @@ class ExifReader(ImageReader):
         with open(path, "rb") as fd:
             exif = exifread.process_file(fd, details=True)
         if not exif:
-            raise ReadMetadataError(f"{os.path.basename(path)}")
+            raise ReadMetadataError(os.path.basename(path))
         make = exif.get("Image Make")
         make = str(make).strip() if make is not None else None
         model = exif.get("Image Model")

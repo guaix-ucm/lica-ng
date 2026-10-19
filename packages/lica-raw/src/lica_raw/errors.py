@@ -12,18 +12,21 @@
 class RawBaseError(Exception):
     """Raw library base error"""
 
+
 class UnsupportedImageFormatError(RawBaseError):
     """Unsupported image format"""
 
+
 class AlreadyClosedError(RawBaseError):
     """Resource already closed"""
+
 
 class UnsupportedCFAError(RawBaseError):
     """Unsupported Color Filter Array"""
 
 
 class ReadMetadataError(RawBaseError):
-    """Could not read EXIF metadata"""
+    """Could not read image metadata"""
 
 
 class UnknownDateTimeFormatError(RawBaseError):

@@ -28,6 +28,7 @@ from ..errors import (
     OutOfBoundsError,
     UnknownDateTimeFormatError,
     AlreadyClosedError,
+    ReadMetadataError,
 )
 from ..models import ImageMetadata
 from ..ports import ImageReader, RawPixels
@@ -116,47 +117,50 @@ class FitsReader(ImageReader):
 
     def read_metadata(self, path: str) -> ImageMetadata:
         """returns an instance of ImageMetadata dataclass"""
-        with fits.open(path) as hdul:
-            header = hdul[0].header
-            available = set(header.keys())
-            if not self.MANDATORY_KEYWORDS < available:
-                raise MissingMandatoryFitsError(self.MANDATORY_KEYWORDS - available)
-            width = header[NAXIS1]
-            height = header[NAXIS2]
-            make = None
-            model = header.get(INSTRUME)
-            exptime = header.get(EXPTIME)
-            gain = header.get(LOG_GAIN)
-            black_level = header.get(PEDESTAL)
-            bayer = header[BAYERPAT]
-            image_type = header.get(IMAGETYP)
-            timestamp = self.handle_date_obs(header.get(DATE_OBS))
-            focal_len = header.get(FOCALLEN)
-            f_number = (
-                None
-                if header.get(APTDIA) is None or focal_len is None
-                else round(focal_len / header[APTDIA], 2)
-            )
-            header_type = self.header_type()
-            extension = os.path.splitext(path)[1]
-            metadata = ImageMetadata(
-                width=width,
-                height=height,
-                make=make,
-                model=model,
-                exptime=exptime,
-                iso=None,
-                gain=gain,
-                black_level=black_level,
-                bayer=bayer,
-                imagetyp=image_type,
-                timestamp=timestamp,
-                focal_len=focal_len,
-                f_number=f_number,
-                header_type=header_type,
-                extension=extension,
-            )
-            return metadata
+        try:
+            with fits.open(path) as hdul:
+                header = hdul[0].header
+                available = set(header.keys())
+                if not self.MANDATORY_KEYWORDS < available:
+                    raise MissingMandatoryFitsError(self.MANDATORY_KEYWORDS - available)
+                width = header[NAXIS1]
+                height = header[NAXIS2]
+                make = None
+                model = header.get(INSTRUME)
+                exptime = header.get(EXPTIME)
+                gain = header.get(LOG_GAIN)
+                black_level = header.get(PEDESTAL)
+                bayer = header[BAYERPAT]
+                image_type = header.get(IMAGETYP)
+                timestamp = self.handle_date_obs(header.get(DATE_OBS))
+                focal_len = header.get(FOCALLEN)
+                f_number = (
+                    None
+                    if header.get(APTDIA) is None or focal_len is None
+                    else round(focal_len / header[APTDIA], 2)
+                )
+                header_type = self.header_type()
+                extension = os.path.splitext(path)[1]
+                metadata = ImageMetadata(
+                    width=width,
+                    height=height,
+                    make=make,
+                    model=model,
+                    exptime=exptime,
+                    iso=None,
+                    gain=gain,
+                    black_level=black_level,
+                    bayer=bayer,
+                    imagetyp=image_type,
+                    timestamp=timestamp,
+                    focal_len=focal_len,
+                    f_number=f_number,
+                    header_type=header_type,
+                    extension=extension,
+                )
+                return metadata
+        except OSError:
+            raise ReadMetadataError(os.path.basename(path))
 
     def read_pixels(self, path: str) -> RawPixels:
         """returns an object that implements the RawPixels interface"""
