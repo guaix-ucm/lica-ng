@@ -58,5 +58,5 @@ publish pkg:
     set -exuo pipefail
     pkg={{pkg}}
     module="${pkg//-/_}"
-    uv publish ${pkg}
+    uvx uv-publish ${pkg} --verbose "dist/${pkg}/*"
     uv run --with ${pkg} --no-project python -c "from ${module} import __version__; print(__version__)"
