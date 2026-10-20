@@ -32,6 +32,3 @@ class ImageMetadata:
     f_number: float | None
     header_type: HeaderType
     extension: str
-
-    def __str__(self) -> str:
-        return f"{self.model} {self.width}x{self.height}"
