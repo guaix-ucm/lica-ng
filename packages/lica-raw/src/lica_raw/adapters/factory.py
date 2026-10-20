@@ -23,11 +23,15 @@ class ImageReaderFactoryImpl(ImageReaderFactory):
     def get_reader(self, path: str) -> ImageReader:
         ext = os.path.splitext(path)[1].lower()
         if ext in FITS_EXTENSIONS:
-            from .fits import FitsReader
-
+            try:
+                from .fits import FitsReader
+            except ModuleNotFoundError:
+                raise UnsupportedImageFormatError("consider adding lica-raw[fits] support")
             return FitsReader()
         if ext in RAW_EXTENSIONS:
-            from .exif import ExifReader
-
+            try:
+                from .exif import ExifReader
+            except ModuleNotFoundError:
+                raise UnsupportedImageFormatError("consider adding lica-raw[exif] support")
             return ExifReader()
         raise UnsupportedImageFormatError(path)
