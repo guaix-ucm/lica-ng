@@ -193,30 +193,30 @@ class ExifRawPixels(RawPixels):
         y2 = section.y2
         return self.img.raw_image[y1:y2:2, x1:x2:2]
 
-    def r(self, section: Rect | None) -> IntArray2D:
+    def red(self, section: Rect | None) -> IntArray2D:
         y, x = np.argwhere(self.pattern == BayerIndex.R)[0]
         return self._section(x, y, section)
 
-    def gr(self, section: Rect | None) -> IntArray2D:
+    def greenr(self, section: Rect | None) -> IntArray2D:
         y, x = np.argwhere(self.pattern == BayerIndex.Gr)[0]
         return self._section(x, y, section)
 
-    def gb(self, section: Rect | None) -> IntArray2D:
+    def greenb(self, section: Rect | None) -> IntArray2D:
         y, x = np.argwhere(self.pattern == BayerIndex.Gb)[0]
         return self._section(x, y, section)
 
-    def b(self, section: Rect | None) -> IntArray2D:
+    def blue(self, section: Rect | None) -> IntArray2D:
         y, x = np.argwhere(self.pattern == BayerIndex.B)[0]
         return self._section(x, y, section)
 
-    def r_black(self) -> int:
+    def red_black_level(self) -> int:
         return self.black_levels[BayerIndex.R]
 
-    def gr_black(self) -> int:
+    def greenr_black_level(self) -> int:
         return self.black_levels[BayerIndex.Gr]
 
-    def gb_black(self) -> int:
+    def greenb_black_level(self) -> int:
         return self.black_levels[BayerIndex.Gb]
 
-    def b_black(self) -> int:
+    def blue_black_level(self) -> int:
         return self.black_levels[BayerIndex.B]

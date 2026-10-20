@@ -223,30 +223,30 @@ class FitsRawPixels(RawPixels):
         img: IntArray2D = self.hdul[0].data
         return img[y1:y2:2, x1:x2:2]
 
-    def r(self, section: Rect | None) -> IntArray2D:
+    def red(self, section: Rect | None) -> IntArray2D:
         y, x = self.coords[BayerIndex.R]
         return self._section(x, y, section)
 
-    def gr(self, section: Rect | None) -> IntArray2D:
+    def greenr(self, section: Rect | None) -> IntArray2D:
         y, x = self.coords[BayerIndex.Gr]
         return self._section(x, y, section)
 
-    def gb(self, section: Rect | None) -> IntArray2D:
+    def greenb(self, section: Rect | None) -> IntArray2D:
         y, x = self.coords[BayerIndex.Gb]
         return self._section(x, y, section)
 
-    def b(self, section: Rect | None) -> IntArray2D:
+    def blue(self, section: Rect | None) -> IntArray2D:
         y, x = self.coords[BayerIndex.B]
         return self._section(x, y, section)
 
-    def r_black(self) -> int:
+    def red_black_level(self) -> int:
         return self.black_levels[BayerIndex.R]
 
-    def gr_black(self) -> int:
+    def greenr_black_level(self) -> int:
         return self.black_levels[BayerIndex.Gr]
 
-    def gb_black(self) -> int:
+    def greenb_black_level(self) -> int:
         return self.black_levels[BayerIndex.Gb]
 
-    def b_black(self) -> int:
+    def blue_black_level(self) -> int:
         return self.black_levels[BayerIndex.B]

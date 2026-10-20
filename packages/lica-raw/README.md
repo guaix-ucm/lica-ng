@@ -82,10 +82,10 @@ class RawPixels(Protocol):
     def gb(self, section: Rect | None) -> IntArray2D: ...
     def b(self, section: Rect | None) -> IntArray2D: ...
 
-    def r_black(self) -> int: ...
-    def gr_black(self) -> int: ...
-    def gb_black(self) -> int: ...
-    def b_black(self) -> int: ...
+    def red_black_level(self) -> int: ...
+    def gred_black_level(self) -> int: ...
+    def gblue_black_level(self) -> int: ...
+    def blue_black_level(self) -> int: ...
 
     def close(self) -> None: ...
 
@@ -220,7 +220,7 @@ The observation date is read from `Image DateTime` or `EXIF DateTimeOriginal`, i
 
 ## Regions of interest
 
-The `r()`, `gr()`, `gb()`, and `b()` methods return a two-dimensional NumPy array containing the pixels of one Bayer colour channel.
+The `red()`, `greenr()`, `greenb()`, and `blue()` methods return a two-dimensional NumPy array containing the pixels of one Bayer colour channel.
 
 If `section` is `None`, the full image is used. Otherwise, `section` must be a `Rect` expressed in output-channel coordinates; it is validated against the available image area and converted internally to the corresponding full-resolution Bayer coordinates.
 
@@ -229,10 +229,10 @@ from lica_raw import Rect
 
 section = Rect(0, 0, 100, 100)
 
-red = pixels.r(section)
-green_red = pixels.gr(section)
-green_blue = pixels.gb(section)
-blue = pixels.b(section)
+red = pixels.red(section)
+green_red = pixels.greenr(section)
+green_blue = pixels.greenb(section)
+blue = pixels.blue(section)
 ```
 
 A section outside the valid area raises `OutOfBoundsError`.
@@ -243,7 +243,7 @@ A section outside the valid area raises `OutOfBoundsError`.
 
 ```python
 with reader.read_pixels(path) as pixels:
-    red = pixels.r(None)
+    red = pixels.red(None)
 ```
 
 For batch processing, explicit closing is equally valid:
@@ -252,7 +252,7 @@ For batch processing, explicit closing is equally valid:
 for path in image_paths:
     pixels = reader.read_pixels(path)
     try:
-        red = pixels.r(None)
+        red = pixels.red(None)
         ...
     finally:
         pixels.close()
@@ -291,16 +291,16 @@ print(metadata.bayer, metadata.exptime, metadata.timestamp)
 
 with reader.read_pixels(path) as pixels:
     # Gets the whole channel when section is None.
-    red = pixels.r(None)
-    green_red = pixels.gr(Rect(0, 0, 256, 256))
-    green_blue = pixels.gb(Rect(0, 0, 256, 256))
-    blue = pixels.b(Rect(0, 0, 256, 256))
+    red = pixels.red(None)
+    green_red = pixels.greenr(Rect(0, 0, 256, 256))
+    green_blue = pixels.greenb(Rect(0, 0, 256, 256))
+    blue = pixels.blue(Rect(0, 0, 256, 256))
 
     print(
-        pixels.r_black(),
-        pixels.gr_black(),
-        pixels.gb_black(),
-        pixels.b_black(),
+        pixels.red_black_level(),
+        pixels.greenr_black_level(),
+        pixels.greenb_black_level(),
+        pixels.blue_black_level(),
     )
 ```
 
@@ -332,7 +332,7 @@ def cli_main(args: Namespace) -> None:
 
     with reader.read_pixels(args.image) as pixels:
         # Gets the whole channel when section is None.
-        print("Red channel shape:", pixels.r(None).shape)
+        print("Red channel shape:", pixels.red(None).shape)
 
 
 def main():
