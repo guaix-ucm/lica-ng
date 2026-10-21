@@ -123,8 +123,8 @@ class FitsReader(ImageReader):
                 available = set(header.keys())
                 if not self.MANDATORY_KEYWORDS < available:
                     raise MissingMandatoryFitsError(self.MANDATORY_KEYWORDS - available)
-                width = header[NAXIS1]
-                height = header[NAXIS2]
+                raw_width = header[NAXIS1]
+                raw_height = header[NAXIS2]
                 make = None
                 model = header.get(INSTRUME)
                 exptime = header.get(EXPTIME)
@@ -142,8 +142,8 @@ class FitsReader(ImageReader):
                 header_type = self.header_type()
                 extension = os.path.splitext(path)[1]
                 metadata = ImageMetadata(
-                    width=width,
-                    height=height,
+                    raw_width=raw_width,
+                    raw_height=raw_height,
                     make=make,
                     model=model,
                     exptime=exptime,

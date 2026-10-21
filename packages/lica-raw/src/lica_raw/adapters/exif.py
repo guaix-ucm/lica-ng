@@ -97,7 +97,7 @@ class ExifReader(ImageReader):
         timestamp = handle_date_obs(exif, path)
         image_type = image_type_by_path(path)
         with rawpy.imread(path) as img:
-            height, width = img.raw_image.shape
+            raw_height, raw_width = img.raw_image.shape
             black_levels = img.black_level_per_channel
             black_level = int(round(sum(black_levels) / len(black_levels), 0))  # mean black level
             color_desc = img.color_desc.decode("utf-8")
@@ -114,8 +114,8 @@ class ExifReader(ImageReader):
             extension = os.path.splitext(path)[1]
 
         metadata = ImageMetadata(
-            width=width,
-            height=height,
+            raw_width=raw_width,
+            raw_height=raw_height,
             make=make,
             model=model,
             exptime=exptime,
