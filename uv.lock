@@ -181,7 +181,7 @@ provides-extras = ["textual"]
 
 [[package]]
 name = "lica-raw"
-version = "0.3.0"
+version = "0.3.1"
 source = { editable = "packages/lica-raw" }
 dependencies = [
     { name = "numpy" },
