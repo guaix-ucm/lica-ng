@@ -286,7 +286,7 @@ factory: ImageReaderFactory = ImageReaderFactoryImpl()
 reader = factory.get_reader(path)
 
 metadata = reader.read_metadata(path)
-print(metadata.model, metadata.width, metadata.height)
+print(metadata.model, metadata.raw_width, metadata.raw_height)
 print(metadata.bayer, metadata.exptime, metadata.timestamp)
 
 with reader.read_pixels(path) as pixels:

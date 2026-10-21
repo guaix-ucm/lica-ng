@@ -120,3 +120,11 @@ class Rect(NamedTuple):
             and self.x2 == other.x2
             and self.y2 == other.y2
         )
+
+def autocenter(screen_raw_width: int, screen_raw_height: int, width: int, height: int) -> Rect:
+    dim = Point(width, height) * 2  # to raw coordinates
+    raw_size = Point(screen_raw_width, screen_raw_height)
+    raw_screen = Rect.from_points(Point.zero(), raw_size)
+    rect = Rect.from_points(Point.zero(), dim).recenter_on(raw_screen)
+    rect = rect // 2  # to each plane coordinates
+    return rect

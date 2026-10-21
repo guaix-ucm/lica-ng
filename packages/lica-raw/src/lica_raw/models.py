@@ -17,8 +17,8 @@ from .types import BayerPattern, ImageType, HeaderType
 
 @dataclass
 class ImageMetadata:
-    width: int
-    height: int
+    raw_width: int
+    raw_height: int
     make: str | None
     model: str | None
     exptime: float | None
