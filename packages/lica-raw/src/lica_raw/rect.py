@@ -96,13 +96,19 @@ class Rect(NamedTuple):
         """as a numpy slice"""
         return f"[{self.y1}:{self.y2},{self.x1}:{self.x2}]"
 
-    def __add__(self, rhs: Point) -> "Rect":
+    def __add__(self, rhs: object) -> "Rect":
+        """Add a Point to a Rect and prodcue a new Rect"""
+        if not isinstance(rhs, Point):
+            return NotImplemented
         return Rect(self.x1 + rhs.x, self.y1 + rhs.y, self.x2 + rhs.x, self.y2 + rhs.y)
 
-    def __mul__(self, rhs: int) -> "Rect":
-        return Rect(self.x1 * rhs, self.y1 * rhs, self.x2 * rhs, self.y2 * rhs)
+    def __mul__(self, rhs: SupportsIndex) -> "Rect":
+        """Multiply Rect by an integer and produce another Rect"""
+        n = index(rhs)
+        return Rect(self.x1 * n, self.y1 * n, self.x2 * n, self.y2 * n)
 
     def __floordiv__(self, rhs: int) -> "Rect":
+        """Divide Rect by an integer and produce another Rect"""
         return Rect(self.x1 // rhs, self.y1 // rhs, self.x2 // rhs, self.y2 // rhs)
 
     def __eq__(self, other: object) -> bool:
