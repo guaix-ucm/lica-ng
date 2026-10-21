@@ -23,6 +23,11 @@ class Point(NamedTuple):
     x: int
     y: int
 
+    def __add__(self, rhs: object) -> "Point":
+        if not isinstance(rhs, Point):
+            return NotImplemented
+        return Point(self.x + rhs.x, self.y + rhs.y)
+
     def __mul__(self, rhs: int) -> "Point":
         return Point(self.x * rhs, self.y * rhs)
 
