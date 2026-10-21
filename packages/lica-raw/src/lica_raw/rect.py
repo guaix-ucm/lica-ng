@@ -7,7 +7,8 @@
 # Standard library
 # ----------------
 import re
-from typing import NamedTuple
+from typing import NamedTuple, SupportsIndex
+from operator import index
 
 # ----------------
 # Own dependencies
@@ -28,8 +29,9 @@ class Point(NamedTuple):
             return NotImplemented
         return Point(self.x + rhs.x, self.y + rhs.y)
 
-    def __mul__(self, rhs: int) -> "Point":
-        return Point(self.x * rhs, self.y * rhs)
+    def __mul__(self, rhs: SupportsIndex) -> "Point":
+        n = index(rhs)
+        return Point(self.x * n, self.y * n)
 
     def __floordiv__(self, rhs: int) -> "Point":
         return Point(self.x // rhs, self.y // rhs)
