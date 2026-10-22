@@ -233,7 +233,7 @@ provides-extras = ["asyncio", "decouple"]
 
 [[package]]
 name = "lica-tables"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "packages/lica-tables" }
 
 [package.optional-dependencies]

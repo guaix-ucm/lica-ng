@@ -9,7 +9,7 @@ tools:
 init:
     uv sync
 
-# sets the packahe version and modifies pyproject.toml
+# sets the package version and modifies pyproject.toml
 version pkg version:
     uv version --package {{pkg}} {{version}}
 
