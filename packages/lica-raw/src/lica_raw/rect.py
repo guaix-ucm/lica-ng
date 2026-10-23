@@ -62,18 +62,29 @@ class Rect(NamedTuple):
         x1, y1, x2, y2 = map(int, match.groups())
         return cls(x1, y1, x2, y2)
 
+    @property
     def width(self) -> int:
         return self.x2 - self.x1
 
+    @property
     def height(self) -> int:
         return self.y2 - self.y1
 
+    @property
+    def shape(self) -> tuple[int, int]:
+        """numpy style -> (height, width)"""
+        return self.y2 - self.y1,  self.x2 - self.x1
+
+    @property
     def dimensions(self) -> tuple[int, int]:
+        """returns -> (width, height)"""
         return self.x2 - self.x1, self.y2 - self.y1
 
+    @property
     def origin(self) -> Point:
         return Point(self.x1, self.y1)
 
+    @property
     def central(self) -> Point:
         return Point((self.x1 + self.x2) // 2, (self.y1 + self.y2) // 2)
 
@@ -86,8 +97,8 @@ class Rect(NamedTuple):
         )
 
     def recenter_on(self, screen: "Rect") -> "Rect":
-        c_screen = screen.central()
-        c_self = self.central()
+        c_screen = screen.central
+        c_self = self.central
         dx = c_screen.x - c_self.x
         dy = c_screen.y - c_self.y
         return self + Point(dx, dy)
