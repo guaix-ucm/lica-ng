@@ -20,7 +20,6 @@ from sqlalchemy.orm import Session, sessionmaker
 from ..ports import Database
 
 class DcplDatabase(Database):
-    """main entry point instatinates this class"""
 
     def __init__(self, env_var: str = "DATABASE_URL") -> None:
         self._env_var = env_var

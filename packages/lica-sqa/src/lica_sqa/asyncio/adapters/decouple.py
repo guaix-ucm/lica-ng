@@ -22,11 +22,10 @@ from sqlalchemy.ext.asyncio import (
 # -----------------
 # Local dependecies
 # -----------------
-from ...ports.asyncio import AsyncDatabase
+from ..ports import AsyncDatabase
 
 
 class AsyncDcplDatabase(AsyncDatabase):
-    """main entry point instatinates this class"""
 
     def __init__(self, env_var: str = "DATABASE_URL") -> None:
         self._env_var = env_var
