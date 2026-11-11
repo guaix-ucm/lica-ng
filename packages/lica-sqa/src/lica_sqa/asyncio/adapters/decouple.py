@@ -8,10 +8,12 @@
 # ----------------
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+
 # ---------------------
 # Third party libraries
 # ---------------------
 import decouple
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -27,6 +29,15 @@ from ..ports import AsyncDatabase
 
 class AsyncDcplDatabase(AsyncDatabase):
 
+    @staticmethod
+    def _set_sqlite_pragma(
+        dbapi_connection,
+        connection_record,
+    ) -> None:
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
+
     def __init__(self, env_var: str = "DATABASE_URL") -> None:
         self._env_var = env_var
 
@@ -40,6 +51,12 @@ class AsyncDcplDatabase(AsyncDatabase):
         self._session_factory = async_sessionmaker(
             self._engine, autoflush=False, expire_on_commit=False
         )
+        if url.startswith("sqlite"):
+            event.listen(
+                self._engine.sync_engine,
+                "connect",
+                self._set_sqlite_pragma,
+            )
 
     @asynccontextmanager
     async def session(self) -> AsyncGenerator[AsyncSession]:
@@ -51,4 +68,4 @@ class AsyncDcplDatabase(AsyncDatabase):
         return self._engine
 
 
-__all__ = ["DcplDatabase", "AsyncDcplDatabase"]
+__all__ = ["AsyncDcplDatabase"]
