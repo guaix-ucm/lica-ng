@@ -1,6 +1,6 @@
 [project]
 name = "lica-sqa"
-version = "0.2.3"
+version = "0.2.4"
 description = "LICA utilities for SQLAlchemy"
 readme = "README.md"
 requires-python = ">=3.12"
