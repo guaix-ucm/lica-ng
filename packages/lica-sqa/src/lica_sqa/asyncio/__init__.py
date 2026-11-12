@@ -7,6 +7,6 @@
 from .. import sqa_logging
 from ..view import view
 from .ports import AsyncDatabase, AsyncSession
-from .metadata import MetaData, metadata
+from .metadata import MetaData, AsyncModel, metadata
 
-__all__ = ["sqa_logging","AsyncDatabase", "MetaData", "AsyncSession", "metadata", "view"]
+__all__ = ["sqa_logging","AsyncDatabase", "MetaData", "AsyncSession", "AsyncModel", "metadata", "view"]
