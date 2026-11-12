@@ -15,7 +15,7 @@ except PackageNotFoundError:
     __version__ = "0.0.0+dev"
 
 
-from .ports import Database
+from .ports import Database, Session
 from .metadata import Model, metadata
 from .view import view
 
@@ -27,4 +27,4 @@ def sqa_logging(debug: bool) -> None:
     else:
         logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 
-__all__ = ["sqa_logging","Database", "Model", "metadata", "view"]
+__all__ = ["sqa_logging","Database", "Model", "Session", "metadata", "view"]
