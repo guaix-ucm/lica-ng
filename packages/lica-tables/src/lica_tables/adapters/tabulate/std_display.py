@@ -9,6 +9,7 @@
 import logging
 from collections.abc import Sequence
 from itertools import batched
+from typing import ClassVar
 
 # ---------------------
 # Third party libraries
@@ -25,7 +26,7 @@ log = logging.getLogger(__name__.split(".")[-1])
 
 
 class StdoutDisplay(DisplayService):
-    FORMATS = {
+    FORMATS: ClassVar[dict[str, str]] = {
         "simple": "-",
         "grid": "=",
         "fancy_grid": "═",
