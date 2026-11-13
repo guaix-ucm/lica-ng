@@ -16,10 +16,10 @@ from types import TracebackType
 # ---------------------
 # Third party libraries
 # ---------------------
-import exifread
+import exifread  # pyright: ignore[reportMissingImports]
 import numpy as np
-import rawpy
-from rawpy._rawpy import RawPy
+import rawpy # pyright: ignore[reportMissingImports]
+from rawpy._rawpy import RawPy # pyright: ignore[reportMissingImports]
 
 # ----------------
 # Own dependencies

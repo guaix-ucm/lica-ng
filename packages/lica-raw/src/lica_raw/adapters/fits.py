@@ -13,8 +13,8 @@ from types import TracebackType
 # ---------------------
 # Third party libraries
 # ---------------------
-from astropy.io import fits
-from astropy.io.fits import HDUList
+from astropy.io import fits # pyright: ignore[reportMissingImports]
+from astropy.io.fits import HDUList # pyright: ignore[reportMissingImports]
 
 # ----------------
 # Own dependencies

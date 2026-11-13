@@ -21,6 +21,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+from ...errors import DatabaseNotFoundError
+
 # -----------------
 # Local dependecies
 # -----------------
@@ -28,7 +30,6 @@ from ..ports import AsyncDatabase
 
 
 class AsyncDcplDatabase(AsyncDatabase):
-
     @staticmethod
     def _set_sqlite_pragma(
         dbapi_connection,
@@ -40,9 +41,13 @@ class AsyncDcplDatabase(AsyncDatabase):
 
     def __init__(self, env_var: str = "DATABASE_URL") -> None:
         self._env_var = env_var
+        self._engine = None
 
     def init(self) -> None:
-        url: str = decouple.config(self._env_var)
+        try:
+            url: str = decouple.config(self._env_var)
+        except Exception as e:
+            raise DatabaseNotFoundError(str(e))
         self._engine = create_async_engine(
             url,
             pool_pre_ping=True,
@@ -64,7 +69,7 @@ class AsyncDcplDatabase(AsyncDatabase):
             yield _session
 
     @property
-    def engine(self) -> AsyncEngine:
+    def engine(self) -> AsyncEngine | None:
         return self._engine
 
 

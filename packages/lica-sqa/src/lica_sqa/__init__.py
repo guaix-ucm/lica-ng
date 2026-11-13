@@ -18,6 +18,7 @@ except PackageNotFoundError:
 from .ports import Database, Session
 from .metadata import Model, metadata
 from .view import view
+from .errors import LicaSqaError
 
 def sqa_logging(debug: bool) -> None:
     if debug:
@@ -27,4 +28,4 @@ def sqa_logging(debug: bool) -> None:
     else:
         logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 
-__all__ = ["sqa_logging","Database", "Model", "Session", "metadata", "view"]
+__all__ = ["sqa_logging","Database", "Model", "Session", "LicaSqaError", "metadata", "view"]

@@ -14,6 +14,8 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from ..errors import DatabaseNotFoundError
+
 # ---------------
 # Own dependecies
 # ---------------
@@ -32,9 +34,13 @@ class DcplDatabase(Database):
 
     def __init__(self, env_var: str = "DATABASE_URL") -> None:
         self._env_var = env_var
+        self._engine = None
 
     def init(self) -> None:
-        url: str = decouple.config(self._env_var)
+        try:
+            url: str = decouple.config(self._env_var)
+        except Exception as e:
+            raise DatabaseNotFoundError(str(e))
         self._engine = create_engine(
             url,
             pool_pre_ping=True,
@@ -54,7 +60,7 @@ class DcplDatabase(Database):
             yield _session
 
     @property
-    def engine(self) -> Engine:
+    def engine(self) -> Engine | None:
         return self._engine
 
 
